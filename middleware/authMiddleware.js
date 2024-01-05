@@ -13,5 +13,7 @@ module.exports = function (res, req, next) {
         next();
     } catch(e) {
         res.status(401).json({status: 401, error: true, message: "Не авторизован"});
+    } finally {
+        console.log(req.headers.authorization.split(' ')[1]);
     }
 }
