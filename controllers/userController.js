@@ -73,7 +73,6 @@ class UserController {
                 process.env.SECRET_KEY,
                 {expiresIn: '24h'}
             );
-            console.log(JSON.parse(user.settings));
             return res.json({status: 200, error: false, token, user: responseUser });
         } catch {
             res.status(401).json({status: 401, error: true, message: "При сохранении произошла ошибка"});
