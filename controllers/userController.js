@@ -78,6 +78,20 @@ class UserController {
             res.status(401).json({status: 401, error: true, message: "При сохранении произошла ошибка"});
         }
     }
+    async getUser(req, res, next) {
+        try {
+            const authToken = req.headers.authorization.split(' ')[1];
+            if (!authToken) {
+                return res.status(401).json({status: 401, error: true, message: "Не авторизован"})
+            }
+            const decoded = jWebToken.verify(authToken, process.env.SECRET_KEY);
+            const user = await User.findOne({where: {email: decoded.email}});
+            const responseUser = {id: user.id, email: user.email, settings: JSON.parse(user.settings), spectated_users: user.spectated_users};
+            return res.json({status: 200, error: false, user: responseUser});
+        } catch {
+            res.status(401).json({status: 401, error: true, message: "При запросе произошла ошибка"});
+        }
+    }
 }
 
 module.exports = new UserController();
